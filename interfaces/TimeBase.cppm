@@ -1,10 +1,11 @@
 //
 // Created by Sourav Bhattacharjee on 27.07.25.
 //
-
-export module timebase;
+module;
 #include <chrono>
 #include <type_traits>
+
+export module timebase;
 
 export namespace Time {
     /**
@@ -15,24 +16,13 @@ export namespace Time {
      * time calculation library to ensure clarity and prevent errors related
      * to ambiguous time representations.
      */
-    enum class TimeUnits {
+    enum class TimeUnit {
         HOURS, ///< Represents a unit of time in hours.
         MINUTES, ///< Represents a unit of time in minutes.
         SECONDS, ///< Represents a unit of time in seconds.
         MILLISECONDS, ///< Represents a unit of time in milliseconds.
         MICROSECONDS ///< Represents a unit of time in microseconds.
     };
-
-    constexpr char *Units_to_string(const TimeUnits e) {
-        switch (e) {
-            case TimeUnits::HOURS: return "HOURS";
-            case TimeUnits::MINUTES: return "MINUTES";
-            case TimeUnits::SECONDS: return "SECONDS";
-            case TimeUnits::MILLISECONDS: return "MILLISECONDS";
-            case TimeUnits::MICROSECONDS: return "MICROSECONDS";
-            default: return "unknown";
-        }
-    }
 
     /**
     * @brief A type alias that maps a TimeUnits enumerator to its corresponding std::chrono duration type.
@@ -41,24 +31,107 @@ export namespace Time {
  *          resolves to `std::chrono::seconds`.
  * @tparam e The TimeUnits enumerator that determines the resulting std::chrono type.
      */
-    template<TimeUnits e>
-    using TimeType = std::conditional_t<e == TimeUnits::HOURS, std::chrono::hours,
-        std::conditional_t<e == TimeUnits::MINUTES, std::chrono::minutes,
-        std::conditional_t<e == TimeUnits::SECONDS, std::chrono::seconds,
-        std::conditional_t<e == TimeUnits::MILLISECONDS, std::chrono::milliseconds, std::chrono::microseconds>>>>;
+    template<TimeUnit e>
+    using TimeType = std::conditional_t<e == TimeUnit::HOURS, std::chrono::hours,
+        std::conditional_t<e == TimeUnit::MINUTES, std::chrono::minutes,
+            std::conditional_t<e == TimeUnit::SECONDS, std::chrono::seconds,
+                std::conditional_t<e == TimeUnit::MILLISECONDS, std::chrono::milliseconds,
+                    std::chrono::microseconds> > > >;
 
-    template<TimeUnits unit = TimeUnits::SECONDS>
-    class Time {
-        private:
-        TimeType<unit> timeUnit_;
-        public:
-        Time() : timeUnit_(unit) {};
-        ~Time() = default;
-        Time(const Time &) = default;
-        Time &operator=(const Time &) = default;
-        Time(Time &&) = default;
-        Time &operator=(Time &&) = default;
+    /**
+ * @class TimeBase
+ * @brief A versatile timer for measuring elapsed time with configurable units.
+ *
+ * @details This class provides a simple yet powerful way to measure time intervals.
+ *          Upon construction, it captures the current time using `std::chrono::steady_clock`,
+ *          which is a monotonic clock suitable for measuring time durations. The elapsed
+ *          time can then be retrieved in various units specified by the `TimeUnits`
+ *          template parameter. The result is returned as a floating-point `std::chrono::duration`
+ *          for high precision.
+ *
+ * @tparam unit The unit of time for measuring and reporting the elapsed duration.
+ *              Defaults to `TimeUnits::SECONDS`.
+ *
+ * @code
+ * #include <iostream>
+ * #include <thread>
+ *
+ * // Assuming the module is imported
+ *  import timebase;
+ *
+ * int main() {
+ *     // Create a timer that measures in milliseconds
+ *     Time::TimeBase<Time::TimeUnits::MILLISECONDS> timer;
+ *
+ *     std::cout << "Timer started. Unit: " << timer.TimeUnit() << std::endl;
+ *
+ *     // Simulate some work for about 1234 milliseconds
+ *     std::this_thread::sleep_for(std::chrono::milliseconds(1234));
+ *
+ *     // Get the elapsed time.
+ *     // Note: elapsed() could be called multiple times to check time at different points.
+ *     auto elapsed_ms = timer.elapsed();
+ *
+ *     std::cout << "Elapsed time: " << elapsed_ms.count() << " ms" << std::endl;
+ *
+ *     return 0;
+ * }
+ * @endcode
+ */
+    template<TimeUnit unit = TimeUnit::SECONDS>
+    class TimeBase {
+    private:
+        std::chrono::time_point<std::chrono::steady_clock> m_startTime_;
+        using Duration = std::chrono::duration<double, typename TimeType<unit>::Period>;
 
-        std::string_view TimeUnit() { return Units_to_string(unit); };
+        [[nodiscard]] constexpr const char *Units_to_string(const TimeUnit e) const {
+            switch (e) {
+                case TimeUnit::HOURS: return "HOURS";
+                case TimeUnit::MINUTES: return "MINUTES";
+                case TimeUnit::SECONDS: return "SECONDS";
+                case TimeUnit::MILLISECONDS: return "MILLISECONDS";
+                case TimeUnit::MICROSECONDS: return "MICROSECONDS";
+                default: return "unknown";
+            }
+        }
+
+    public:
+        /**
+    * @brief Constructs a TimeBase object and starts the timer.
+    * @details The constructor captures the current time point from `std::chrono::steady_clock`,
+    *          which serves as the starting point for all subsequent elapsed time measurements.
+    */
+        TimeBase() : m_startTime_(std::chrono::steady_clock::now()) {};
+
+        /** @brief Default destructor. */
+        ~TimeBase() = default;
+
+        /** @brief Default copy constructor. */
+        TimeBase(const TimeBase &) = default;
+
+        /** @brief Default copy assignment operator. */
+        TimeBase &operator=(const TimeBase &) = default;
+
+        /** @brief Default move constructor. */
+        TimeBase(TimeBase &&) = default;
+
+        /** @brief Default move assignment operator. */
+        TimeBase &operator=(TimeBase &&) = default;
+
+        /**
+     * @brief Returns the time unit of the timer as a string.
+     * @return A `std::string_view` representing the configured time unit (e.g., "SECONDS").
+     */
+        [[nodiscard]] std::string_view TimeUnit() const { return Units_to_string(unit); };
+        /**
+ * @brief Calculates the elapsed time since the timer was started.
+ * @details This method calculates the duration between the current time and the time
+ *          the `TimeBase` object was constructed. It can be called multiple times.
+ * @return A `std::chrono::duration` with a `double` representation holding the elapsed
+ *         time in the unit specified by the template parameter `unit`.
+ */
+        [[nodiscard]] Duration elapsed() const {
+            return std::chrono::duration_cast<Duration>(std::chrono::steady_clock::now() - m_startTime_);
+        }
     };
 }
