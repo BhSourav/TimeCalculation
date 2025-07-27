@@ -10,7 +10,7 @@ add_executable(run_tests
 # This gives your tests access to the code you want to test.
 target_link_libraries(run_tests
         PRIVATE
-        template_project::template_project
+        TimeCalculation::TimeCalculation
 )
 
 # Link against GoogleTest.

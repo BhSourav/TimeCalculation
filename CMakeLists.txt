@@ -2,7 +2,7 @@
 ## Created by Sourav Bhattacharjee on 26.07.25.
 ####################################################################################
 cmake_minimum_required(VERSION 3.31)
-project(template_project VERSION 0.0.1 LANGUAGES CXX)
+project(TimeCalculation VERSION 0.0.1 LANGUAGES CXX)
 
 ####################################################################################
 #Default Configs
@@ -28,7 +28,7 @@ target_sources(${CMAKE_PROJECT_NAME}
         FILE_SET interfaces
         TYPE CXX_MODULES
         FILES
-        "interfaces/templateModule.cppm"
+        "interfaces/TimeBase.cppm"
         PUBLIC
         FILE_SET include
         TYPE HEADERS
