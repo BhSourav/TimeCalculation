@@ -3,7 +3,7 @@
 ####################################################################################
 add_executable(run_tests
         TimeBase_test.cpp
-        # Add other test files here...
+        MockTimeBase.cpp
 )
 
 # Link your test executable against your main library target.
@@ -19,6 +19,7 @@ target_link_libraries(run_tests
 target_link_libraries(run_tests
         PRIVATE
         GTest::gtest_main
+        GTest::gmock_main
 )
 
 # This CMake command automatically finds all tests (TEST_F, TEST, etc.)

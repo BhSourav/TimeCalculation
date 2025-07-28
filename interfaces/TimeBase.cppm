@@ -104,7 +104,7 @@ export namespace Time {
         TimeBase() : m_startTime_(std::chrono::steady_clock::now()) {};
 
         /** @brief Default destructor. */
-        ~TimeBase() = default;
+        virtual ~TimeBase() = default;
 
         /** @brief Default copy constructor. */
         TimeBase(const TimeBase &) = default;
