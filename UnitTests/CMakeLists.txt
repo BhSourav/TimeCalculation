@@ -2,7 +2,7 @@
 ## Created by Sourav Bhattacharjee on 26.07.25.
 ####################################################################################
 add_executable(run_tests
-        template-test.cpp
+        TimeBase_test.cpp
         # Add other test files here...
 )
 

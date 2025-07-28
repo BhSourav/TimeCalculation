@@ -32,11 +32,11 @@ export namespace Time {
  * @tparam e The TimeUnits enumerator that determines the resulting std::chrono type.
      */
     template<TimeUnit e>
-    using TimeType = std::conditional_t<e == TimeUnit::HOURS, std::chrono::hours,
-        std::conditional_t<e == TimeUnit::MINUTES, std::chrono::minutes,
-            std::conditional_t<e == TimeUnit::SECONDS, std::chrono::seconds,
-                std::conditional_t<e == TimeUnit::MILLISECONDS, std::chrono::milliseconds,
-                    std::chrono::microseconds> > > >;
+    using TimeType = std::conditional_t<e == TimeUnit::HOURS, std::ratio<3600>,
+        std::conditional_t<e == TimeUnit::MINUTES, std::ratio<60>,
+            std::conditional_t<e == TimeUnit::SECONDS, std::ratio<1>,
+                std::conditional_t<e == TimeUnit::MILLISECONDS, std::milli,
+                    std::micro> > > >;
 
     /**
  * @class TimeBase
@@ -82,7 +82,7 @@ export namespace Time {
     class TimeBase {
     private:
         std::chrono::time_point<std::chrono::steady_clock> m_startTime_;
-        using Duration = std::chrono::duration<double, typename TimeType<unit>::Period>;
+        using Duration = std::chrono::duration<double, TimeType<unit>>;
 
         [[nodiscard]] constexpr const char *Units_to_string(const TimeUnit e) const {
             switch (e) {
@@ -131,7 +131,7 @@ export namespace Time {
  *         time in the unit specified by the template parameter `unit`.
  */
         [[nodiscard]] Duration elapsed() const {
-            return std::chrono::duration_cast<Duration>(std::chrono::steady_clock::now() - m_startTime_);
+            return Duration(std::chrono::steady_clock::now() - m_startTime_);
         }
     };
 }
