@@ -36,7 +36,7 @@ export namespace Time {
                 return "The stopwatch should be initialised with the start() function.";
             if (m_currentLap >= MAX_LAP)
                 return "Lap count exceeded";
-            m_stopWatch_.end()->stop()
+            m_stopWatch_.end()->stop();
             std::chrono::duration<double, TimeType<unit>> t = m_stopWatch_.end()->elapsed();
             m_stopWatch_.emplace_back(std::make_unique<TimeBase<unit>>());
             m_currentLap++;
