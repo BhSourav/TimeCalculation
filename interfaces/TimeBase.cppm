@@ -82,6 +82,8 @@ export namespace Time {
     class TimeBase {
     private:
         std::chrono::time_point<std::chrono::steady_clock> m_startTime_;
+        std::chrono::time_point<std::chrono::steady_clock> m_stopTime_;
+        bool is_running_;
         using Duration = std::chrono::duration<double, TimeType<unit>>;
 
         [[nodiscard]] constexpr const char *Units_to_string(const TimeUnit e) const {
@@ -101,7 +103,8 @@ export namespace Time {
     * @details The constructor captures the current time point from `std::chrono::steady_clock`,
     *          which serves as the starting point for all subsequent elapsed time measurements.
     */
-        TimeBase() : m_startTime_(std::chrono::steady_clock::now()) {};
+        TimeBase() : m_startTime_(std::chrono::steady_clock::now())
+                    , is_running_(true) {};
 
         /** @brief Default destructor. */
         virtual ~TimeBase() = default;
@@ -130,8 +133,15 @@ export namespace Time {
  * @return A `std::chrono::duration` with a `double` representation holding the elapsed
  *         time in the unit specified by the template parameter `unit`.
  */
-        [[nodiscard]] Duration elapsed() const {
-            return Duration(std::chrono::steady_clock::now() - m_startTime_);
+        [[nodiscard]] std::variant<Duration, Duration> elapsed() const {
+            if (is_running_)
+                return Duration(std::chrono::steady_clock::now() - m_startTime_);
+            return Duration(m_stopTime_ - m_startTime_);
+        }
+
+        void stop() {
+            is_running_ = false;
+            m_stopTime_ = std::chrono::steady_clock::now();
         }
     };
 }

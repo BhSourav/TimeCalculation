@@ -29,6 +29,10 @@ target_sources(${CMAKE_PROJECT_NAME}
         TYPE CXX_MODULES
         FILES
         "interfaces/TimeBase.cppm"
+        "interfaces/StopWatch.cppm"
+        #PRIVATE
+)
+target_sources(${CMAKE_PROJECT_NAME}
         PUBLIC
         FILE_SET include
         TYPE HEADERS
