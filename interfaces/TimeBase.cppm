@@ -103,7 +103,7 @@ export namespace Time {
     *          which serves as the starting point for all subsequent elapsed time measurements.
     */
         TimeBase() : m_startTime_(std::chrono::steady_clock::now())
-                    , is_running_(true) {};
+                    , is_running_(true) {}
 
         /** @brief Default destructor. */
         virtual ~TimeBase() = default;
@@ -123,10 +123,38 @@ export namespace Time {
         using Duration = std::chrono::duration<double, TimeType<unit>>;
 
         /**
+         * @brief Gets the absolute time point when the timer was started.
+         * @return The std::chrono::time_point of the start time.
+         */
+        [[nodiscard]] virtual std::chrono::time_point<std::chrono::steady_clock> startTime() const {
+            return m_startTime_;
+        }
+
+        /**
+         * @brief Gets the absolute time point when the timer was stopped.
+         * @return The std::chrono::time_point of the stop time.
+         * @warning If the timer is still running, the returned value is uninitialized.
+         *          Check isRunning() before calling.
+         */
+        [[nodiscard]] virtual std::optional<std::chrono::time_point<std::chrono::steady_clock>> stopTime() const {
+            if (is_running_)
+                return std::nullopt;
+            return m_stopTime_;
+        }
+
+        /**
+         * @brief Checks if the timer is currently running.
+         * @return True if the timer is running, false if stop() has been called.
+         */
+        [[nodiscard]] virtual bool isRunning() const {
+            return is_running_;
+        }
+
+        /**
      * @brief Returns the time unit of the timer as a string.
      * @return A `std::string_view` representing the configured time unit (e.g., "SECONDS").
      */
-        [[nodiscard]] virtual std::string_view TimeUnit() const { return Units_to_string(unit); };
+        [[nodiscard]] virtual std::string_view TimeUnit() const { return Units_to_string(unit); }
         /**
  * @brief Calculates the elapsed time since the timer was started.
  * @details This method calculates the duration between the current time and the time
