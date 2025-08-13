@@ -4,7 +4,7 @@
 #include <gtest/gtest.h>
 #include <chrono>
 #include <thread>
-
+#include <variant>
 import timebase;
 
 TEST(TimeBaseTest, TimeUnitStringValue) {
@@ -18,10 +18,10 @@ TEST(TimeBaseTest, TimeUnitStringValue) {
 
 TEST(TimeBaseTest, ElapsedTimeIsIncreasing) {
     Time::TimeBase<Time::TimeUnit::MICROSECONDS> timer;
-    auto time1 = timer.elapsed().count();
+    auto time1 = (timer.elapsed()).count();
     EXPECT_GE(time1, 0);
     std::this_thread::sleep_for(std::chrono::microseconds(10));
-    auto time2 = timer.elapsed().count();
+    auto time2 = (timer.elapsed()).count();
     EXPECT_GT(time2, time1);
 }
 
@@ -29,7 +29,7 @@ TEST(TimeBaseTest, DefaultUnitIsSecond) {
     Time::TimeBase timer;
     EXPECT_EQ(timer.TimeUnit(), "SECONDS");
     std::this_thread::sleep_for(std::chrono::seconds(1));
-    auto elapsed = timer.elapsed().count();
+    auto elapsed = (timer.elapsed()).count();
     EXPECT_GE(elapsed, 1);
     EXPECT_LT(elapsed, 1.1);
 }

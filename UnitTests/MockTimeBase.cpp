@@ -9,14 +9,15 @@ import timebase;
 namespace Time::Testing {
 
     template<TimeUnit unit = TimeUnit::SECONDS>
-    class MockTimeBase {
+    class MockTimeBase : public Time::TimeBase<unit>{
     public:
-        virtual ~MockTimeBase() = default;
+        //~MockTimeBase() override = default;
 
-        using Duration = std::chrono::duration<double, TimeType<unit>>;
+        using Duration = typename TimeBase<unit>::Duration;
 
-        MOCK_METHOD(std::string_view, TimeUnit, (), (const));
-        MOCK_METHOD(Duration, elapsed, (), (const));
+        MOCK_METHOD(std::string_view, TimeUnit, (), (const, override));
+        MOCK_METHOD(Duration, elapsed, (), (const, override));
+        MOCK_METHOD(void, stop, (), (override));
     };
 
 } // namespace Time::Testing

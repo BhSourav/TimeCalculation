@@ -84,7 +84,6 @@ export namespace Time {
         std::chrono::time_point<std::chrono::steady_clock> m_startTime_;
         std::chrono::time_point<std::chrono::steady_clock> m_stopTime_;
         bool is_running_;
-        using Duration = std::chrono::duration<double, TimeType<unit>>;
 
         [[nodiscard]] constexpr const char *Units_to_string(const TimeUnit e) const {
             switch (e) {
@@ -121,11 +120,13 @@ export namespace Time {
         /** @brief Default move assignment operator. */
         TimeBase &operator=(TimeBase &&) = default;
 
+        using Duration = std::chrono::duration<double, TimeType<unit>>;
+
         /**
      * @brief Returns the time unit of the timer as a string.
      * @return A `std::string_view` representing the configured time unit (e.g., "SECONDS").
      */
-        [[nodiscard]] std::string_view TimeUnit() const { return Units_to_string(unit); };
+        [[nodiscard]] virtual std::string_view TimeUnit() const { return Units_to_string(unit); };
         /**
  * @brief Calculates the elapsed time since the timer was started.
  * @details This method calculates the duration between the current time and the time
@@ -133,13 +134,13 @@ export namespace Time {
  * @return A `std::chrono::duration` with a `double` representation holding the elapsed
  *         time in the unit specified by the template parameter `unit`.
  */
-        [[nodiscard]] std::variant<Duration, Duration> elapsed() const {
+        [[nodiscard]] virtual Duration elapsed() const {
             if (is_running_)
                 return Duration(std::chrono::steady_clock::now() - m_startTime_);
             return Duration(m_stopTime_ - m_startTime_);
         }
 
-        void stop() {
+        virtual void stop() {
             is_running_ = false;
             m_stopTime_ = std::chrono::steady_clock::now();
         }
