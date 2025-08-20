@@ -173,4 +173,168 @@ export namespace Time {
             m_stopTime_ = std::chrono::steady_clock::now();
         }
     };
+
+    /*class Timer {
+private:
+    // A type alias for a high-resolution clock time point.
+    using TimePoint = std::chrono::high_resolution_clock::time_point;
+
+    // Member variable to hold the worker thread.
+    // Using std::unique_ptr ensures proper memory management.
+    std::unique_ptr<std::thread> m_workerThread;
+
+    // A promise to send the elapsed time from the worker thread back to the main thread.
+    std::promise<double> m_elapsedTimePromise;
+
+    // A future to wait for a signal from the main thread.
+    std::future<void> m_mainThreadSignal;
+
+    /**
+     * @brief The worker function to be run in a separate thread.
+     *
+     * This private method is the entry point for the worker thread. It measures
+     * the time from when it's launched, waits for a signal from the main thread,
+     * then records the stop time and sends the result back.
+     #1#
+    void runTimerThread() {
+        try {
+            // Record the start time.
+            TimePoint startTime = std::chrono::high_resolution_clock::now();
+
+            std::cout << "Worker thread started and measuring time..." << std::endl;
+
+            // Wait for the main thread to signal that its work is done.
+            m_mainThreadSignal.get();
+
+            // Record the stop time.
+            TimePoint stopTime = std::chrono::high_resolution_clock::now();
+
+            // Calculate the duration.
+            std::chrono::duration<double> elapsedTime = stopTime - startTime;
+
+            // Fulfill the promise with the calculated elapsed time.
+            m_elapsedTimePromise.set_value(elapsedTime.count());
+
+            std::cout << "Worker thread finished and sent result." << std::endl;
+        } catch (const std::exception& e) {
+            // If an error occurs, set an exception on the promise.
+            m_elapsedTimePromise.set_exception(std::make_exception_ptr(e));
+        }
+    }
+
+public:
+    /**
+     * @brief Default constructor for the Timer class.
+     #1#
+    Timer() = default;
+
+    /**
+     * @brief Destructor for the Timer class.
+     *
+     * Ensures the worker thread is joined before the object is destroyed.
+     #1#
+    ~Timer() {
+        if (m_workerThread && m_workerThread->joinable()) {
+            m_workerThread->join();
+        }
+    }
+
+    /**
+     * @brief Starts the timer by launching a new thread.
+     *
+     * Throws an exception if a timer is already running.
+     * @return A promise object that the main thread can use to signal completion.
+     #1#
+    std::promise<void> start() {
+        if (m_workerThread && m_workerThread->joinable()) {
+            throw std::runtime_error("Timer is already running.");
+        }
+
+        // Reset the promise to prepare for a new asynchronous operation.
+        m_elapsedTimePromise = std::promise<double>();
+
+        // Create a promise for the main thread signal.
+        std::promise<void> mainThreadPromise;
+        m_mainThreadSignal = mainThreadPromise.get_future();
+
+        // Launch a new thread that will run the `runTimerThread` method.
+        m_workerThread = std::make_unique<std::thread>(&Timer::runTimerThread, this);
+
+        std::cout << "Timer started in a new thread, waiting for signal from main thread." << std::endl;
+
+        // Return the promise for the main thread to use.
+        return mainThreadPromise;
+    }
+
+    /**
+     * @brief Stops the timer and gets the elapsed time from the worker thread.
+     *
+     * This is a blocking call that waits for the worker thread to finish. It
+     * then retrieves the calculated time from the promise.
+     * @return The elapsed time in seconds as a double.
+     #1#
+    double stop() {
+        if (!m_workerThread || !m_workerThread->joinable()) {
+            throw std::runtime_error("Timer is not running. Cannot stop.");
+        }
+
+        // Join the worker thread to ensure it has finished its work.
+        m_workerThread->join();
+
+        // Get the future to retrieve the result from the worker thread.
+        std::future<double> future = m_elapsedTimePromise.get_future();
+
+        // Retrieve the value from the future. This will block until the
+        // promise has a value set.
+        double result = future.get();
+
+        std::cout << "Timer stopped and result retrieved." << std::endl;
+
+        return result;
+    }
+};
+
+/**
+ * @class TimerHigh
+ * @brief A wrapper class for the Timer, simplifying its usage.
+ *
+ * This class encapsulates the internal Timer and the promise-future logic,
+ * providing a simpler start-stop interface for the user.
+ #1#
+class TimerHigh {
+private:
+    Timer m_timer;
+    std::promise<void> m_mainThreadPromise;
+
+public:
+    /**
+     * @brief Default constructor.
+     #1#
+    TimerHigh() = default;
+
+    /**
+     * @brief Starts the timer.
+     *
+     * This method starts the internal Timer and stores the promise that will
+     * be used to signal the worker thread.
+     #1#
+    void start() {
+        m_mainThreadPromise = m_timer.start();
+    }
+
+    /**
+     * @brief Stops the timer and gets the elapsed time.
+     *
+     * This method signals the worker thread to stop and then retrieves
+     * the elapsed time from it.
+     * @return The elapsed time in seconds as a double.
+     #1#
+    double stop() {
+        // Signal the worker thread that the main thread's work is done.
+        m_mainThreadPromise.set_value();
+
+        // Stop the internal timer and return the result.
+        return m_timer.stop();
+    }
+};*/
 }

@@ -66,15 +66,15 @@ generate_export_header(${CMAKE_PROJECT_NAME} EXPORT_FILE_NAME
 ###################################################################################
 # executable
 ###################################################################################
-add_executable(${CMAKE_PROJECT_NAME}_exec "main.cpp")
-target_link_libraries(${CMAKE_PROJECT_NAME}_exec PUBLIC ${CMAKE_PROJECT_NAME})
+#add_executable(${CMAKE_PROJECT_NAME}_exec "main.cpp")
+#target_link_libraries(${CMAKE_PROJECT_NAME}_exec PUBLIC ${CMAKE_PROJECT_NAME})
 ###################################################################################
 
 ####################################################################################
 # Unit Testing Setup
 ####################################################################################
 # Add an option to enable/disable tests from the command line (-DBUILD_TESTING=ON/OFF)
-option(BUILD_TESTING "Build the unit tests" ON)
+option(BUILD_TESTING "Build the unit tests" OFF)
 
 # Only set up testing infrastructure if the user has enabled it.
 if(BUILD_TESTING)
