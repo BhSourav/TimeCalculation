@@ -67,8 +67,8 @@ generate_export_header(${CMAKE_PROJECT_NAME} EXPORT_FILE_NAME
 ###################################################################################
 # executable
 ###################################################################################
-add_executable(${CMAKE_PROJECT_NAME}_exec "main.cpp")
-target_link_libraries(${CMAKE_PROJECT_NAME}_exec PUBLIC ${CMAKE_PROJECT_NAME})
+#add_executable(${CMAKE_PROJECT_NAME}_exec "main.cpp")
+#target_link_libraries(${CMAKE_PROJECT_NAME}_exec PUBLIC ${CMAKE_PROJECT_NAME})
 ###################################################################################
 
 ####################################################################################

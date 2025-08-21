@@ -4,8 +4,10 @@
 add_executable(run_tests
         TimeBase_test.cpp
         MockTimeBase.cpp
-        Alarm_test.cpp
-        MockAlarm.cpp
+        #MockTimeBase.h
+        #Alarm_test.cpp
+        #MockAlarm.cpp
+        #MockAlarm.h
 )
 
 # Link your test executable against your main library target.
@@ -24,6 +26,10 @@ target_link_libraries(run_tests
         GTest::gmock_main
 )
 
+target_include_directories(run_tests PRIVATE
+        googletest/googletest/include
+        googletest/googlemock/include
+)
 # This CMake command automatically finds all tests (TEST_F, TEST, etc.)
 # in your executable and adds them to CTest.
 include(GoogleTest)
