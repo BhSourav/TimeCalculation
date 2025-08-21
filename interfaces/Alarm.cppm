@@ -13,6 +13,7 @@ export namespace Time
     class Alarm
     {
     public:
+        //Alarm() = default;
         explicit Alarm(TimeUnit_t<unit> duration)
             : finished_(false), stop_(false), duration_(duration)
         {
@@ -62,14 +63,14 @@ export namespace Time
             }
         }
 
-        void stop()
+        virtual void stop()
         {
             stop_.store(true);
             condition_.notify_all();
         }
 
-        bool shouldAlarmRang() const { return finished_.load(); };
-
+        virtual bool shouldAlarmRing() const { return finished_.load(); };
+        virtual bool isJoinable() const { return alarmThread_.joinable(); }
     private:
         std::thread alarmThread_;
         std::atomic<bool> finished_;

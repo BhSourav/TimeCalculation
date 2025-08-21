@@ -4,6 +4,8 @@
 add_executable(run_tests
         TimeBase_test.cpp
         MockTimeBase.cpp
+        Alarm_test.cpp
+        MockAlarm.cpp
 )
 
 # Link your test executable against your main library target.
