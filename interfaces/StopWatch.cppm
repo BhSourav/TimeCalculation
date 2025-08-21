@@ -3,6 +3,7 @@
 //
 module;
 #include <chrono>
+#include <variant>
 export module stopwatch;
 import timebase;
 export namespace Time {
@@ -89,7 +90,7 @@ export namespace Time {
         *
         * @return The current lap number being timed.
         */
-        virtual size_t lapNumber() const noexcept {
+        [[nodiscard]] virtual size_t lapNumber() const noexcept {
             return m_stopWatch_.size();
         }
 
@@ -106,7 +107,7 @@ export namespace Time {
          * @brief Gets the number of fully completed laps.
          * @return The count of completed laps.
          */
-        size_t completedLapCount() const noexcept {
+        [[nodiscard]] size_t completedLapCount() const noexcept {
             if (m_stopWatch_.empty())
                 return 0;
             return m_stopWatch_.size() - 1;
@@ -117,7 +118,7 @@ export namespace Time {
          * @param lapNum The 1-based lap number to query.
          * @return A std::variant containing the lap's duration on success, or an error string on failure.
          */
-        virtual std::variant<std::chrono::duration<double, TimeType<unit>>, std::string> lapTime(const uint8_t lapNum) const {
+        [[nodiscard]] virtual std::variant<std::chrono::duration<double, TimeType<unit>>, std::string> lapTime(const uint8_t lapNum) const {
             const auto completedLaps = completedLapCount();
             if (lapNum == 0 || lapNum > completedLaps)
                 return "Invalid lap number. Must be between 1 and " + std::to_string(completedLaps) + ".";
@@ -146,7 +147,7 @@ export namespace Time {
          * @param endLap The lap number (1-based) to stop measuring at. Must be a completed lap.
          * @return A std::variant containing the total duration on success, or an error string on failure.
          */
-        virtual std::variant<std::chrono::duration<double, TimeType<unit>>, std::string>
+        [[nodiscard]] virtual std::variant<std::chrono::duration<double, TimeType<unit>>, std::string>
         timeBetweenLaps(const uint8_t startLap, uint8_t endLap) const {
             // --- Validation ---
             if (startLap == 0 || endLap == 0) {

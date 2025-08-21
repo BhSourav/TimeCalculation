@@ -24,6 +24,13 @@ export namespace Time {
         MICROSECONDS ///< Represents a unit of time in microseconds.
     };
 
+    template<TimeUnit e>
+    using TimeUnit_t = std::conditional_t<e == TimeUnit::SECONDS, std::chrono::seconds,
+                            std::conditional_t<e == TimeUnit::MINUTES, std::chrono::minutes,
+                            std::conditional_t<e == TimeUnit::HOURS, std::chrono::hours,
+                            std::conditional_t<e == TimeUnit::MILLISECONDS, std::chrono::milliseconds,
+                            std::chrono::microseconds> > > >;
+
     /**
     * @brief A type alias that maps a TimeUnits enumerator to its corresponding std::chrono duration type.
  * @details This alias uses template metaprogramming with std::conditional_t to select the

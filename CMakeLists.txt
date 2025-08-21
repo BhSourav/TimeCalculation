@@ -30,6 +30,7 @@ target_sources(${CMAKE_PROJECT_NAME}
         FILES
         "interfaces/TimeBase.cppm"
         "interfaces/StopWatch.cppm"
+        "interfaces/Alarm.cppm"
         #PRIVATE
 )
 target_sources(${CMAKE_PROJECT_NAME}
