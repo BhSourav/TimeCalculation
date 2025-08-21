@@ -45,7 +45,7 @@ TEST(AlarmTest, MoveAssignmentOperatorWorks) {
 TEST(MockAlarmTest, TaskCompletesWhenMockAlarmIsFinished)
 {
     Time::Testing::MockAlarm<> mock_timer(std::chrono::seconds(3));
-    Time::Testing::Task task(mock_timer);
+    Time::Testing::Task<> task(mock_timer);
 
     // Set an expectation: we expect the `isFinished` method to be called twice.
     // The first time it will return false, the second time it will return true.

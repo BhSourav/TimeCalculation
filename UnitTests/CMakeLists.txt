@@ -4,12 +4,12 @@
 add_executable(run_tests
         TimeBase_test.cpp
         MockTimeBase.cpp
-        #MockTimeBase.h
-        #Alarm_test.cpp
-        #MockAlarm.cpp
-        #MockAlarm.h
+        MockTimeBase.h
+        Alarm_test.cpp
+        MockAlarm.cpp
+        MockAlarm.h
 )
-
+target_compile_definitions( run_tests PRIVATE -DGTEST_LINKED_AS_SHARED_LIBRARY )
 # Link your test executable against your main library target.
 # This gives your tests access to the code you want to test.
 target_link_libraries(run_tests
