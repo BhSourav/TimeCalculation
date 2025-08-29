@@ -119,7 +119,7 @@ export namespace Time {
          * @return A std::variant containing the lap's duration on success, or an error string on failure.
          */
         [[nodiscard]] virtual std::variant<std::chrono::duration<double, TimeType<unit>>, std::string> lapTime(const uint8_t lapNum) const {
-            const auto completedLaps = completedLapCount();
+            const size_t completedLaps = completedLapCount();
             if (lapNum == 0 || lapNum > completedLaps)
                 return "Invalid lap number. Must be between 1 and " + std::to_string(completedLaps) + ".";
             return m_stopWatch_[lapNum - 1]->elapsed();
@@ -130,7 +130,7 @@ export namespace Time {
          * @return A std::variant containing the total duration on success, or an error string if no laps are complete.
          */
         virtual std::variant<std::chrono::duration<double, TimeType<unit>>, std::string> totalTime() const {
-            const auto completedLaps = completedLapCount();
+            const size_t completedLaps = completedLapCount();
             if (completedLaps == 0) {
                 return "No completed laps to measure.";
             }
@@ -148,7 +148,7 @@ export namespace Time {
          * @return A std::variant containing the total duration on success, or an error string on failure.
          */
         [[nodiscard]] virtual std::variant<std::chrono::duration<double, TimeType<unit>>, std::string>
-        timeBetweenLaps(const uint8_t startLap, uint8_t endLap) const {
+        timeBetweenLaps(const uint8_t startLap, const uint8_t endLap) const {
             // --- Validation ---
             if (startLap == 0 || endLap == 0) {
                 return "Lap numbers must be 1-based and non-zero.";

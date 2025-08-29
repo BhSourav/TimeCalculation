@@ -20,8 +20,8 @@ export namespace Time
             alarmThread_ = std::thread([this]()
             {
                 std::unique_lock<std::mutex> lock(mutex_);
-                bool timeUp = condition_.wait_for(lock, duration_, [this]()
-                    { return stop_.load(); });
+                [[maybe_unused]] bool timeUp = condition_.wait_for(lock, duration_, [this]()
+                                                                   { return stop_.load(); });
                 if (!stop_.load())
                     finished_.store(true);
             });
@@ -63,7 +63,7 @@ export namespace Time
             }
         }
 
-        virtual void stop()
+        void stop()
         {
             stop_.store(true);
             condition_.notify_all();

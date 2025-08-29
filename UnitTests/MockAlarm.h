@@ -18,7 +18,7 @@ public:
     explicit MockAlarm(Time::TimeUnit_t<Unit> duration) : Time::Alarm<Unit>(duration) {}
     MOCK_METHOD(bool, isJoinable, (), (const, override));
     MOCK_METHOD(bool, shouldAlarmRing, (), (const, override));
-    MOCK_METHOD(void, stop, (), (override));
+   // MOCK_METHOD(void, stop, (), (override));
 };
 
 template <Time::TimeUnit Unit = Time::TimeUnit::SECONDS>

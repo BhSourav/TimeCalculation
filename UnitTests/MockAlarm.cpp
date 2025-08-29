@@ -3,4 +3,3 @@
 //
 
 #include "MockAlarm.h"
-#include <gmock/gmock.h>
