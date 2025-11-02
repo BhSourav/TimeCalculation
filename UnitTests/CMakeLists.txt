@@ -27,9 +27,10 @@ target_link_libraries(run_tests
 )
 
 target_include_directories(run_tests PRIVATE
-        googletest/googletest/include
-        googletest/googlemock/include
+        ${CMAKE_SOURCE_DIR}/_deps/googletest-src/googletest/include
+        ${CMAKE_SOURCE_DIR}/_deps/googletest-src/googlemock/include
 )
+
 # This CMake command automatically finds all tests (TEST_F, TEST, etc.)
 # in your executable and adds them to CTest.
 include(GoogleTest)

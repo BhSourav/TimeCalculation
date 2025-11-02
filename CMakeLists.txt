@@ -15,7 +15,7 @@ set(CMAKE_CXX_SCAN_FOR_MODULES ON)
 # Build Configs
 ####################################################################################
 set(BUILD_SHARED_LIBS ON)
-set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+#set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
 add_library(${CMAKE_PROJECT_NAME})
 add_library(${CMAKE_PROJECT_NAME}::${CMAKE_PROJECT_NAME} ALIAS ${CMAKE_PROJECT_NAME})
@@ -67,8 +67,8 @@ generate_export_header(${CMAKE_PROJECT_NAME} EXPORT_FILE_NAME
 ###################################################################################
 # executable
 ###################################################################################
-#add_executable(${CMAKE_PROJECT_NAME}_exec "main.cpp")
-#target_link_libraries(${CMAKE_PROJECT_NAME}_exec PUBLIC ${CMAKE_PROJECT_NAME})
+add_executable(${CMAKE_PROJECT_NAME}_exec "main.cpp")
+target_link_libraries(${CMAKE_PROJECT_NAME}_exec PUBLIC ${CMAKE_PROJECT_NAME})
 ###################################################################################
 
 ####################################################################################
